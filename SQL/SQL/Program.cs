@@ -34,6 +34,12 @@ namespace SQL
          * - Удалить все!
          */
 
+        /*
+         * 
+         *   ЛИСТАЙ ВНИЗ, ТАМ СТРУКТУРА БАЗЫ ДАННЫХ (чтоб понятнее было)
+         * 
+         */
+
         static void Main(string[] args)
         {
             Delete();
@@ -83,7 +89,7 @@ namespace SQL
 
         // Действия
 
-        static void Action_1()
+        static void Action_1() // Для создания и обновления
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Что будем делать?");
@@ -147,7 +153,7 @@ namespace SQL
             }
         }
 
-        static void Action_2()
+        static void Action_2() // Для чтения
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Что будем делать?");
@@ -227,7 +233,7 @@ namespace SQL
             }
         }
 
-        static void Action_3()
+        static void Action_3() // Для удаления
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Что будем делать?");
@@ -310,7 +316,7 @@ namespace SQL
 
         // Заполнение
 
-        static void Fill()
+        static void Fill() // Заполняю каждую из 3 таблиц начальными значениями
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -359,18 +365,18 @@ namespace SQL
             }
         }
 
-        static void FillMaterial(int id, string name)
+        static void FillMaterial(int id, string name) // Добавляю или обновляю материал
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
                 conn.Open();
-                using (var cmd = new NpgsqlCommand(
+                using (var cmd = new NpgsqlCommand( // Получить количество материалов с таким id
                     $"SELECT COUNT(*) FROM materials WHERE id_material = {id}"
                     , conn))
                 {
                     int count = int.Parse(cmd.ExecuteScalar().ToString());
 
-                    if (count > 0)
+                    if (count > 0) // Уже есть? Обновляем
                     {
                         using (var updateCmd = new NpgsqlCommand(
                             $"UPDATE materials SET name_material = '{name}' WHERE id_material = {id}"
@@ -381,7 +387,7 @@ namespace SQL
 
                         Console.WriteLine("Поле успешно обновлено");
                     }
-                    else
+                    else // Еще нет? Создаем новый
                     {
                         using (var insertCmd = new NpgsqlCommand(
                             $"INSERT INTO materials (id_material, name_material) VALUES ({id}, '{name}')"
@@ -396,7 +402,7 @@ namespace SQL
             }
         }
 
-        static void FillObject(int id, string name, int[] materials)
+        static void FillObject(int id, string name, int[] materials) // Так же, как с материалом, только с предметом
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -435,7 +441,7 @@ namespace SQL
             }
         }
 
-        static void FillObjectDescription(string name, string description)
+        static void FillObjectDescription(string name, string description) // Так же, как с материалом, только с описанием
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -475,7 +481,7 @@ namespace SQL
 
         // Чтение
 
-        static void ReadMaterial(int id_material)
+        static void ReadMaterial(int id_material) // Найти материал по ид
         {
             string name = string.Empty;
 
@@ -483,11 +489,12 @@ namespace SQL
             {
                 conn.Open();
 
+                // Получить name_material из materials по ид
                 using (var cmd = new NpgsqlCommand($"SELECT name_material FROM materials WHERE id_material = {id_material}", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        if (reader.Read()) // Прочитался? Берем значение
                         {
                             name = reader.GetString(0);
                         }
@@ -502,7 +509,7 @@ namespace SQL
             Console.WriteLine($"ID = {id_material}: {name}");
         }
 
-        static void ReadObject(int id_object)
+        static void ReadObject(int id_object) // Найти предмет по ид
         {
             string name = string.Empty;
             string description = string.Empty;
@@ -513,11 +520,12 @@ namespace SQL
             {
                 conn.Open();
 
+                // Ищем в предметах название предмета по ид
                 using (var cmd = new NpgsqlCommand($"SELECT name_object FROM objects WHERE id_object = {id_object}", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        if (reader.Read()) // Нашли? Сохранили
                         {
                             name = reader.GetString(0);
                         }
@@ -529,11 +537,12 @@ namespace SQL
                     }
                 }
 
+                // По этому имени ищем описание
                 using (var cmd = new NpgsqlCommand($"SELECT description FROM object_descriptions WHERE name_object = '{name}'", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        if (reader.Read()) // Нашли? Сохранили
                         {
                             description = reader.GetString(0);
                         }
@@ -544,6 +553,7 @@ namespace SQL
                     }
                 }
 
+                // По ид ищем материалы для крафта
                 using (var cmd = new NpgsqlCommand($"SELECT materials FROM objects WHERE id_object = {id_object}", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
@@ -597,7 +607,7 @@ namespace SQL
             }
         }
 
-        static void ReadObjectDescription(int id_object_description)
+        static void ReadObjectDescription(int id_object_description) // Найти предмет по описанию (как с материалом)
         {
             string name = string.Empty;
 
@@ -641,7 +651,7 @@ namespace SQL
             Console.WriteLine($"ID = {id_object_description}: {name}");
         }
 
-        static void ReadMaterials()
+        static void ReadMaterials() // Прочитать все материалы, которые есть (вот тебе и массив, без лишних объектов)
         {
             using (var connection = new NpgsqlConnection(connectingString))
             {
@@ -666,7 +676,7 @@ namespace SQL
             }
         }
 
-        static void ReadObjects()
+        static void ReadObjects() // Прочитать все предметы
         {
             using (var connection = new NpgsqlConnection(connectingString))
             {
@@ -691,7 +701,7 @@ namespace SQL
             }
         }
 
-        static void ReadObjectDescriptions()
+        static void ReadObjectDescriptions() // Прочитать все описания
         {
             using (var connection = new NpgsqlConnection(connectingString))
             {
@@ -720,7 +730,7 @@ namespace SQL
 
         // Удаление
 
-        static void DeleteMaterial(int id_material)
+        static void DeleteMaterial(int id_material) // Удалить материал
         {
             using (var connection = new NpgsqlConnection(connectingString))
             {
@@ -751,7 +761,7 @@ namespace SQL
             Console.WriteLine("Удаление прошло успешно");
         }
 
-        static void DeleteObject(int id_object)
+        static void DeleteObject(int id_object) // Удалить предмет
         {
             using (var connection = new NpgsqlConnection(connectingString))
             {
@@ -782,7 +792,7 @@ namespace SQL
             Console.WriteLine("Удаление прошло успешно");
         }
 
-        static void DeleteObjectDescription(int id_description)
+        static void DeleteObjectDescription(int id_description) // Удалить описание
         {
             using (var connection = new NpgsqlConnection(connectingString))
             {
@@ -831,7 +841,7 @@ namespace SQL
             Console.WriteLine("Удаление прошло успешно");
         }
 
-        static void DeleteMaterials()
+        static void DeleteMaterials() // Удалить ВСЕ материалы
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -848,7 +858,7 @@ namespace SQL
             Console.WriteLine("Удаление прошло успешно");
         }
 
-        static void DeleteObjects()
+        static void DeleteObjects() // Удалить ВСЕ предметы
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -865,7 +875,7 @@ namespace SQL
             Console.WriteLine("Удаление прошло успешно");
         }
 
-        static void DeleteObjectDescriptions()
+        static void DeleteObjectDescriptions() // Удалить ВСЕ описания
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -882,7 +892,7 @@ namespace SQL
             Console.WriteLine("Удаление прошло успешно");
         }
 
-        static void Delete()
+        static void Delete() // Удалить ВООБЩЕ ВСЕ
         {
             using (var conn = new NpgsqlConnection(connectingString))
             {
@@ -902,3 +912,21 @@ namespace SQL
         }
     }
 }
+
+/*
+ * ТАБЛИЦА 1: materials
+ * - id_material: индекс материала   <------------------------------------------
+ * - name_material: имя материала                                               |
+ *                                                                              |
+ *                                                                              |
+ * ТАБЛИЦА 2: objects                                                           |
+ * - id_object: индекс объекта                                                  |
+ * - name_object: имя объекта   <-----------------------------------------------|--------------
+ * - materials: материалы (вектор чисел, где каждое число - индекс материала ---               |
+ *                                                                                             |
+ *                                                                                             |
+ * ТАБЛИЦА 3: object_descriptions                                                              |
+ * - name_object: имя объекта   ---------------------------------------------------------------
+ * - description: описание объекта
+ * 
+ */
