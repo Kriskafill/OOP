@@ -1,0 +1,10 @@
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\bin\Debug\ServerRequest.exe.config
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\bin\Debug\ServerRequest.exe
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\bin\Debug\ServerRequest.pdb
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\obj\Debug\ServerRequest.csproj.AssemblyReference.cache
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\obj\Debug\ServerRequest.csproj.CoreCompileInputs.cache
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\obj\Debug\ServerRequest.exe
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\obj\Debug\ServerRequest.pdb
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\bin\Debug\Newtonsoft.Json.dll
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\bin\Debug\Newtonsoft.Json.xml
+C:\Users\krisk\Документы\Университет\ООП C#\ServerRequest\ServerRequest\obj\Debug\ServerRequest.csproj.CopyComplete
